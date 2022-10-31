@@ -10,6 +10,9 @@ import {
   Montserrat_400Regular,
 } from "@expo-google-fonts/montserrat";
 
+import { Provider } from "react-redux";
+import { store } from "./store";
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
@@ -27,10 +30,12 @@ export default function App() {
     return null;
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </SafeAreaProvider>
+      </Provider>
     );
   }
 }
