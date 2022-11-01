@@ -11,16 +11,21 @@ import {
   DarkTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
 import { ColorSchemeName, Pressable } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { auth } from "../auth";
 
 import Colors from "../constants/Colors";
+import { useAppDispatch, useAppSelector } from "../hooks/resuxHooks";
 import useColorScheme from "../hooks/useColorScheme";
+import Home from "../screens/Home";
 import LoginScreen from "../screens/LoginScreen";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
+import { setActiveUser } from "../store/slices/userSlice";
 import {
   RootStackParamList,
   RootTabParamList,
@@ -47,24 +52,44 @@ export default function Navigation({
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
+  // const user = useAppSelector((state) => state.user);
+  // const dispatch = useAppDispatch();
+  // const [Screen, setScreen] = useState("Login");
+  // // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   const user = auth.currentUser;
+
+  //   if (!user) {
+  //     dispatch(setActiveUser(user));
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!user) {
+  //     setScreen("Home");
+  //   }
+  //   console.log(user);
+  // }, [user]);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Root"
+        name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
       />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      {/* <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
-      </Stack.Group>
+      </Stack.Group> */}
     </Stack.Navigator>
   );
 }
