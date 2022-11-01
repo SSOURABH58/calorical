@@ -1,21 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface InitialState {
   [key: string]: any;
 }
 
-const initialState: InitialState = {};
+const initialState: InitialState | null = {};
 
 const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setActiveUser: (state, action) => ({
+    setActiveUser: (state, action: PayloadAction<any>) => ({
       ...action.payload,
     }),
-    setUserLogoutState: (state, action) => {
-      state = {};
-    },
+    setUserLogoutState: (state, action) => ({}),
   },
 });
 
