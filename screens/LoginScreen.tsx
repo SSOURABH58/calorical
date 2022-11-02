@@ -124,7 +124,7 @@ const LoginScreen = ({ navigation }: any) => {
           color={theme.textD}
         />
       </LoginBtn>
-      <LoginBtn
+      {/* <LoginBtn
         title="Login with Apple"
         onPress={() => {
           signOut(auth);
@@ -136,7 +136,7 @@ const LoginScreen = ({ navigation }: any) => {
           size={32}
           color={theme.textD}
         />
-      </LoginBtn>
+      </LoginBtn> */}
     </View>
   );
 };

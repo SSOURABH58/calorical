@@ -23,6 +23,7 @@ import Home from "../screens/Home";
 import LoginScreen from "../screens/LoginScreen";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import SplashScreen from "../screens/SplashScreen";
 import TabOneScreen from "../screens/TabOneScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
@@ -90,7 +91,7 @@ function RootNavigator() {
       />
       <Stack.Screen
         name="Home"
-        component={Home}
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
       {/* <Stack.Group screenOptions={{ presentation: "modal" }}>

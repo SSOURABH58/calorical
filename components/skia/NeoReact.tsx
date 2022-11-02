@@ -24,28 +24,47 @@ const theme = Colors.light;
 interface NeoReact {
   radius: number;
   children?: ReactNode;
-  animatedValue: SkiaValue<number>;
+  animatedValue?: SkiaValue<number>;
+  inner?: boolean;
 }
 
-const NeoReact: React.FC<NeoReact> = ({ children, radius, animatedValue }) => {
+const NeoReact: React.FC<NeoReact> = ({
+  children,
+  radius,
+  animatedValue,
+  inner,
+}) => {
+  const padding = !inner ? 30 : 0;
+  const offset = !inner ? 15 : 0;
   const { size } = useCanvas();
   const rct = useComputedValue(() => {
     return rrect(
-      rect(15, 15, size.current.width - 30, size.current.height - 30),
+      rect(
+        offset,
+        offset,
+        size.current.width - padding,
+        size.current.height - padding
+      ),
       radius,
       radius
     );
   }, [size]);
 
   const opacity = useComputedValue(
-    () => animatedValue.current,
+    () => animatedValue?.current,
     [animatedValue]
   );
   return (
     <Group opacity={opacity}>
       <RoundedRect rect={rct} color={theme.background}>
-        <Shadow dx={5} dy={5} blur={5} color={theme.shadowD} />
-        <Shadow dx={-5} dy={-5} blur={5} color={theme.shadowL} />
+        {!inner ? (
+          <>
+            <Shadow dx={5} dy={5} blur={5} color={theme.shadowD} />
+            <Shadow dx={-5} dy={-5} blur={5} color={theme.shadowL} />
+          </>
+        ) : (
+          <Shadow dx={0} dy={0} blur={15} color={theme.shadowD} inner />
+        )}
         {children && children}
       </RoundedRect>
     </Group>
