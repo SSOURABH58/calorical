@@ -11,9 +11,9 @@ import {
   signInWithCredential,
   signOut,
 } from "firebase/auth";
-import { auth } from "../auth";
+import { auth, getProfileDoc } from "../auth";
 import { useAppDispatch, useAppSelector } from "../hooks/resuxHooks";
-import { setActiveUser } from "../store/slices/userSlice";
+import { setActiveUser, setUserProfile } from "../store/slices/userSlice";
 import { useNavigation } from "@react-navigation/native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
@@ -27,7 +27,8 @@ const LoginScreen = ({ navigation }: any) => {
   >("");
   // const [userInfo, setUserInfo] = React.useState();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.auth);
+  const userProfile = useAppSelector((state) => state.user.profile);
 
   // const navigation = useNavigation
 
@@ -74,6 +75,29 @@ const LoginScreen = ({ navigation }: any) => {
       navigation.replace("Home");
     }
   }, [user]);
+  useEffect(() => {
+    // if (Status) {
+    if (user?.email) {
+      (async () => {
+        const profile = await getProfileDoc(user?.id);
+        if (profile) {
+          const data = profile?.toJSON();
+          dispatch(setUserProfile({ ...data, fetchedProfile: true }));
+          // setProfileStatus(data)
+        } else {
+          navigation.replace("Profile");
+        }
+      })();
+      // navigation.replace("Home");
+    }
+    // }
+  }, [user]);
+
+  useEffect(() => {
+    if (userProfile?.fetchedProfile) {
+      navigation.replace("Home");
+    }
+  }, [userProfile]);
 
   // const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
   //   expoClientId:

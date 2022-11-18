@@ -57,7 +57,7 @@ export default function Navigation({
 const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
-  // const user = useAppSelector((state) => state.user);
+  // const user = useAppSelector((state) => state.user.auth);
   // const dispatch = useAppDispatch();
   // const [Screen, setScreen] = useState("Login");
   // // const dispatch = useDispatch();
@@ -85,12 +85,17 @@ function RootNavigator() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="Home"
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name="Login"
         component={LoginScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Home"
+        name="Profile"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />

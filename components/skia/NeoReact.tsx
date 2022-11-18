@@ -26,6 +26,7 @@ interface NeoReact {
   children?: ReactNode;
   animatedValue?: SkiaValue<number>;
   inner?: boolean;
+  color?: string;
 }
 
 const NeoReact: React.FC<NeoReact> = ({
@@ -33,6 +34,7 @@ const NeoReact: React.FC<NeoReact> = ({
   radius,
   animatedValue,
   inner,
+  color,
 }) => {
   const padding = !inner ? 30 : 0;
   const offset = !inner ? 15 : 0;
@@ -56,10 +58,15 @@ const NeoReact: React.FC<NeoReact> = ({
   );
   return (
     <Group opacity={opacity}>
-      <RoundedRect rect={rct} color={theme.background}>
+      <RoundedRect rect={rct} color={color ? color : theme.background}>
         {!inner ? (
           <>
-            <Shadow dx={5} dy={5} blur={5} color={theme.shadowD} />
+            <Shadow
+              dx={5}
+              dy={5}
+              blur={5}
+              color={color ? color : theme.shadowD}
+            />
             <Shadow dx={-5} dy={-5} blur={5} color={theme.shadowL} />
           </>
         ) : (

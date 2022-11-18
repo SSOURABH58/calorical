@@ -1,5 +1,12 @@
-import { StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import React, { Profiler, useEffect, useState } from "react";
 import Colors from "../constants/Colors";
 import Header from "../components/Header";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,7 +14,7 @@ import Layout from "../constants/Layout";
 import { Canvas } from "@shopify/react-native-skia";
 import NeoReact from "../components/skia/NeoReact";
 import { signOut } from "firebase/auth";
-import { auth } from "../auth";
+import { addToUserProfile, auth } from "../auth";
 import { useAppDispatch, useAppSelector } from "../hooks/resuxHooks";
 import { setActiveUser } from "../store/slices/userSlice";
 import { async } from "@firebase/util";
@@ -19,7 +26,16 @@ const theme = Colors.light;
 
 const ProfileScreen = ({ navigation }: any) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.auth);
+  console.log(user);
+
+  const profile = useAppSelector((state) => state.user.profile);
+  const [displayProfile, setDisplayProfile] = useState(profile);
+
+  const handleChange = (val: any) => {
+    setDisplayProfile((state: any) => ({ ...state, ...val }));
+  };
+  // console.log(profile);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -50,11 +66,35 @@ const ProfileScreen = ({ navigation }: any) => {
           <Text style={styles.logoutText}>Log-Out</Text>
         </Pressable>
       </Header>
-      <ProfileCard name={user.name} />
-      <View style={{ height: 40 }} />
-      <InputField title={"Name"} inputs={{ from: {}, to: {} }} />
+      <ProfileCard name={user.given_name} />
+      {/* <View style={{ height: 15 }} /> */}
+      {profile !== displayProfile ? (
+        <Pressable
+          style={styles.saveBtn}
+          onPress={() => addToUserProfile(displayProfile, user.id)}
+        >
+          <Text style={styles.saveText}>Save</Text>
+          <Canvas style={styles.canvas}>
+            <NeoReact radius={20} color={theme.indicatorLo} />
+          </Canvas>
+        </Pressable>
+      ) : (
+        <View style={{ height: 30 }} />
+      )}
+
+      {Object.keys(profile).map((val: string, key) => (
+        <InputField
+          key={key}
+          title={profile[val].title}
+          inputs={displayProfile[val]}
+          handleChange={(vale) => {
+            handleChange({ ...displayProfile, [val]: vale });
+          }}
+        />
+      ))}
       {/* <InputField title={"Name"} inputs={{ from: {}, to: {} }} /> */}
     </View>
+    // </KeyboardAvoidingView>
   );
 };
 
@@ -77,6 +117,13 @@ const styles = StyleSheet.create({
   logoutText: {
     color: theme.indicatorHi,
     textAlign: "right",
+    zIndex: 1000,
+    fontFamily: "Montserrat_600SemiBold",
+    fontSize: 18,
+  },
+  saveText: {
+    color: "#fff",
+    textAlign: "center",
     zIndex: 1000,
     fontFamily: "Montserrat_600SemiBold",
     fontSize: 18,
@@ -108,9 +155,21 @@ const styles = StyleSheet.create({
     // backgroundColor: "red",
   },
   canvas: {
-    height: 75 + 30,
-    width: Layout.window.width * 0.85 + 30,
+    height: 50 + 30,
+    // width: Layout.window.width * 0.85 + 30,
+    width: "100%",
     position: "absolute",
     zIndex: 100,
+  },
+  saveBtn: {
+    width: 120,
+    height: 75,
+    justifyContent: "center",
+    alignItems: "center",
+    // marginTop: 32,
+    position: "relative",
+    flexDirection: "row",
+    alignSelf: "flex-end",
+    marginRight: 32,
   },
 });

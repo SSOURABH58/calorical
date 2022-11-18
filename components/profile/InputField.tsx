@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import TextInputBox, { TextInputBoxi } from "../TextInputBox";
 import Colors from "../../constants/Colors";
 import { Feather } from "@expo/vector-icons";
@@ -12,21 +12,36 @@ interface InputField {
   inputs: {
     from: TextInputBoxi;
     to?: TextInputBoxi;
+    unit?: string;
+    inputLength?: number;
   };
+  handleChange: (val: any) => void;
 }
 
-const InputField: React.FC<InputField> = ({ title, inputs }) => {
+const InputField: React.FC<InputField> = ({ title, inputs, handleChange }) => {
+  const [EditF, setEditF] = useState(false);
+  const [EditT, setEditT] = useState(false);
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{`${title} :`}</Text>
       <View style={styles.inputBoxes}>
         <View style={styles.textBoxCont}>
-          <TextInputBox>
+          <TextInputBox
+            value={inputs?.from.value}
+            inputLength={inputs?.inputLength}
+            unit={inputs?.unit}
+            onActive={(val) => setEditF(val)}
+            onChange={(val) => {
+              handleChange({ ...inputs, from: { ...inputs.from, value: val } });
+            }}
+            showActive
+          >
             <Feather
               style={styles.icon}
               name="edit-2"
               size={18}
-              color={theme.textD}
+              color={EditF ? theme.indicatorLo : theme.textD}
             />
           </TextInputBox>
         </View>
@@ -34,12 +49,23 @@ const InputField: React.FC<InputField> = ({ title, inputs }) => {
         {inputs?.to && <Text style={styles.text}>{`to`}</Text>}
         {inputs?.to && (
           <View style={styles.textBoxCont}>
-            <TextInputBox>
+            <TextInputBox
+              value={inputs?.to.value}
+              inputLength={inputs?.inputLength}
+              unit={inputs?.unit}
+              onActive={(val) => setEditT(val)}
+              onChange={(val) => {
+                handleChange({ ...inputs, to: { ...inputs.to, value: val } });
+              }}
+              showActive
+            >
               <Feather
                 style={styles.icon}
                 name="edit-2"
                 size={18}
-                color={theme.textD}
+                // color={theme.textD}
+                color={EditT ? theme.indicatorLo : theme.textD}
+                showActive
               />
             </TextInputBox>
           </View>

@@ -10,10 +10,13 @@ export interface TextInputBoxi {
   placeholder?: string;
   value?: string;
   onChange?: (value: string) => void;
+  onActive?: (value: boolean) => void;
   height?: number;
   rootStyle?: object;
   inputLength?: number;
   fixedWidth?: number;
+  unit?: string;
+  showActive?: boolean;
 }
 
 const theme = Colors.light;
@@ -27,17 +30,33 @@ const TextInputBox: React.FC<TextInputBoxi> = ({
   rootStyle,
   inputLength,
   fixedWidth,
+  unit,
+  onActive,
+  showActive,
 }) => {
-  const [text, onChangeText] = useState<string>("2000");
+  // const [text, onChangeText] = useState<string | undefined>(value?.toString());
+  const [isActive, setIsActive] = useState(false);
   return (
     <View style={[styles.testInputBox, rootStyle]}>
       <View style={styles.boxCont}>
         <TextInput
-          style={[styles.input, { width: fixedWidth }]}
-          onChangeText={onChangeText}
-          value={text}
+          style={[
+            styles.input,
+            { width: fixedWidth },
+            { color: showActive && isActive ? theme.indicatorLo : theme.textD },
+          ]}
+          onChangeText={onChange}
+          value={`${value}${unit ? unit : ""}`}
           placeholder={placeholder}
           maxLength={inputLength}
+          onFocus={() => {
+            onActive && onActive(true);
+            setIsActive(true);
+          }}
+          onBlur={() => {
+            onActive && onActive(false);
+            setIsActive(false);
+          }}
         />
         <View style={styles.childCont}>{children && children}</View>
       </View>

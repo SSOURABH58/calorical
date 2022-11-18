@@ -6,6 +6,7 @@ export default {
     background: "#EEF4F9",
     shadowL: "#fff",
     shadowD: "#d1d9e6",
+    shadowI: "#0000004D",
     indicatorLo: "#6F87FE",
     indicatorOk: "#66FF61",
     indicatorHi: "#FE6F7D",
