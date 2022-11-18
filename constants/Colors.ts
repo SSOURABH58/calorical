@@ -16,6 +16,7 @@ export default {
     prime1: "#FFA500",
     prime2: "#FE6F7D",
     prime3: "#FFDC00",
+    disabled: "#BCBCBC",
   },
   dark: {
     textS: "#000",
@@ -33,5 +34,6 @@ export default {
     prime1: "#FFA500",
     prime2: "#FE6F7D",
     prime3: "#FFDC00",
+    disabled: "#BCBCBC",
   },
 };

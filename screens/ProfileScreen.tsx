@@ -5,6 +5,7 @@ import {
   Pressable,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import React, { Profiler, useEffect, useState } from "react";
 import Colors from "../constants/Colors";
@@ -21,6 +22,7 @@ import { async } from "@firebase/util";
 import { Feather } from "@expo/vector-icons";
 import ProfileCard from "../components/profile/ProfileCard";
 import InputField from "../components/profile/InputField";
+// import { ScrollView } from "react-native-gesture-handler";
 
 const theme = Colors.light;
 
@@ -43,6 +45,10 @@ const ProfileScreen = ({ navigation }: any) => {
     console.log("logut", user);
   };
 
+  const handleBack = () => {
+    navigation.navigate("Home");
+  };
+
   useEffect(() => {
     if (!user?.email) {
       navigation.replace("Login");
@@ -50,14 +56,21 @@ const ProfileScreen = ({ navigation }: any) => {
   }, [user]);
 
   return (
+    // <View style={{ height: "200%" }}>
     <View style={styles.container}>
       <Header>
-        <Ionicons
-          style={styles.icon}
-          name="ios-arrow-back"
-          size={32}
-          color="black"
-        />
+        <Pressable
+          onPress={() => {
+            handleBack();
+          }}
+        >
+          <Ionicons
+            style={styles.icon}
+            name="ios-arrow-back"
+            size={32}
+            color="black"
+          />
+        </Pressable>
         <Pressable
           onPress={() => {
             handleLogout();
@@ -67,34 +80,46 @@ const ProfileScreen = ({ navigation }: any) => {
         </Pressable>
       </Header>
       <ProfileCard name={user.given_name} />
-      {/* <View style={{ height: 15 }} /> */}
-      {profile !== displayProfile ? (
+      <View style={{ height: 20 }} />
+      <ScrollView style={{ flexGrow: 1 }}>
+        <KeyboardAvoidingView
+          // style={{ flexGrow: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          // behavior={"padding"}
+          keyboardVerticalOffset={1400}
+        >
+          {Object.keys(profile).map((val: string, key) => (
+            <InputField
+              key={key}
+              title={profile[val].title}
+              inputs={displayProfile[val]}
+              handleChange={(vale) => {
+                handleChange({ ...displayProfile, [val]: vale });
+              }}
+            />
+          ))}
+        </KeyboardAvoidingView>
+
         <Pressable
           style={styles.saveBtn}
           onPress={() => addToUserProfile(displayProfile, user.id)}
+          disabled={profile === displayProfile}
         >
           <Text style={styles.saveText}>Save</Text>
           <Canvas style={styles.canvas}>
-            <NeoReact radius={20} color={theme.indicatorLo} />
+            <NeoReact
+              radius={20}
+              color={
+                profile !== displayProfile ? theme.indicatorLo : theme.disabled
+              }
+            />
           </Canvas>
         </Pressable>
-      ) : (
-        <View style={{ height: 30 }} />
-      )}
+      </ScrollView>
 
-      {Object.keys(profile).map((val: string, key) => (
-        <InputField
-          key={key}
-          title={profile[val].title}
-          inputs={displayProfile[val]}
-          handleChange={(vale) => {
-            handleChange({ ...displayProfile, [val]: vale });
-          }}
-        />
-      ))}
       {/* <InputField title={"Name"} inputs={{ from: {}, to: {} }} /> */}
     </View>
-    // </KeyboardAvoidingView>
+    // </View>
   );
 };
 
@@ -170,6 +195,6 @@ const styles = StyleSheet.create({
     position: "relative",
     flexDirection: "row",
     alignSelf: "flex-end",
-    marginRight: 32,
+    // marginRight: 32,
   },
 });

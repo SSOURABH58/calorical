@@ -10,14 +10,17 @@ import { CircleProgressBar } from "../components/skia/CircleProgressBar";
 
 const theme = Colors.light;
 
-// ToDo: link state and values userProfile                                                                                                                                    
+// ToDo: link state and values userProfile
 
-const Home = () => {
+const Home = ({ navigation }: any) => {
+  const heandleOnProfile = () => {
+    navigation.navigate("Profile");
+  };
   return (
     <View style={styles.container}>
       <Header>
         <Text style={styles.titleText}>Calories</Text>
-        <Pressable>
+        <Pressable onPress={heandleOnProfile}>
           <Feather style={styles.icon} name="user" size={32} color="black" />
         </Pressable>
       </Header>

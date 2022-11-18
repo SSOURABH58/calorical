@@ -9,7 +9,8 @@ export const auth = getAuth(app);
 
 export const addToUserProfile = async (data, uid) => {
     // await const user = auth.currentUser;
-    await setDoc(doc(db, "profile", uid), data).catch(err => {
+    console.log("save");
+    await setDoc(doc(db, "profile", uid), data).then(res => { console.log(res); }).catch(err => {
         console.log(err);
     });
 }
